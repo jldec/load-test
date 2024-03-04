@@ -1,0 +1,1 @@
+The editor's reactive system is driven by `PageContext`. The PageContext contains information about the current repository, branch, directory, and more. See [types](./types.ts). Ping @samuelstroschein if you have questions.

@@ -1,0 +1,21 @@
+{
+	"name": "@inlang/template-plugin",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"files": [
+		"./dist"
+	],
+	"scripts": {
+		"build": "inlang module build --entry ./src/index.ts",
+		"dev": "inlang module build --entry ./src/index.ts --watch",
+		"test": "tsc --noEmit && vitest run"
+	},
+	"devDependencies": {
+		"@inlang/sdk": "workspace:*",
+		"@inlang/cli": "workspace:*",
+		"@lix-js/client": "workspace:*",
+		"typescript": "^5.2.2",
+		"vitest": "^0.34.4"
+	}
+}

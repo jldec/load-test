@@ -1,0 +1,202 @@
+{
+	"name": "vs-code-extension",
+	"private": true,
+	"displayName": "Sherlock – i18n inspector (prev inlang)",
+	"type": "module",
+	"description": "Visualize, edit & lint translated strings at a glance via Inline Decorations & Hover Support, and extract new strings with a single click.",
+	"publisher": "inlang",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/opral/monorepo.git"
+	},
+	"icon": "assets/sherlock-logo.png",
+	"version": "1.32.8",
+	"engines": {
+		"vscode": "^1.84.2"
+	},
+	"keywords": [
+		"i18n",
+		"localization",
+		"translation",
+		"inspector",
+		"Sherlock"
+	],
+	"categories": [
+		"Other",
+		"Linters",
+		"Visualization"
+	],
+	"main": "./dist/main.cjs",
+	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "inlang",
+					"title": "Inlang",
+					"icon": "assets/sherlock-vscode-logo.svg"
+				}
+			]
+		},
+		"views": {
+			"inlang": [
+				{
+					"when": "inlang:showRecommendationBanner && inlang:hasProjectInWorkspace",
+					"id": "recommendationBanner",
+					"name": "Recommendation",
+					"type": "webview",
+					"group": "inlang@1"
+				},
+				{
+					"when": "!inlang:hasProjectInWorkspace",
+					"id": "gettingStartedView",
+					"name": "Getting Started",
+					"type": "webview",
+					"group": "inlang@2"
+				},
+				{
+					"when": "inlang:hasProjectInWorkspace",
+					"id": "projectView",
+					"name": "Projects",
+					"type": "tree",
+					"group": "inlang@3"
+				},
+				{
+					"when": "inlang:hasProjectInWorkspace",
+					"id": "messageView",
+					"name": "Messages",
+					"type": "webview",
+					"group": "inlang@4"
+				},
+				{
+					"when": "inlang:hasProjectInWorkspace",
+					"id": "errorView",
+					"name": "Errors",
+					"type": "tree",
+					"group": "inlang@5"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "inlang.openProject",
+				"title": "Open project"
+			},
+			{
+				"command": "inlang.openSettingsFile",
+				"title": "Open settings file",
+				"icon": "$(go-to-file)"
+			},
+			{
+				"command": "inlang.copyError",
+				"title": "Copy Error",
+				"icon": "$(copy)"
+			}
+		],
+		"menus": {
+			"view/item/context": [
+				{
+					"when": "view == projectView && viewItem == projectViewNode",
+					"command": "inlang.openProject",
+					"group": "navigation"
+				},
+				{
+					"when": "view == projectView && viewItem == projectViewNode",
+					"command": "inlang.openSettingsFile",
+					"group": "inline"
+				},
+				{
+					"when": "view == errorView && viewItem == errorNode",
+					"command": "inlang.copyError",
+					"group": "inline"
+				}
+			]
+		},
+		"configuration": {
+			"properties": {
+				"inlang.userId": {
+					"type": "string",
+					"default": ""
+				},
+				"inlang.disableRecommendation": {
+					"type": "array",
+					"default": []
+				},
+				"inlang.disableConfigFileCreation": {
+					"type": "array",
+					"default": []
+				},
+				"inlang.disableConfigFileDeletion": {
+					"type": "array",
+					"default": []
+				},
+				"inlang.previewLanguageTag": {
+					"type": "string",
+					"default": ""
+				}
+			}
+		}
+	},
+	"scripts": {
+		"check": "tsc --noEmit",
+		"build": "node ./build.js",
+		"dev": "DEV=true node ./build.js",
+		"package": "pnpm vsce package --no-dependencies",
+		"publish": "pnpm vsce publish --no-dependencies",
+		"vscode:prepublish": "npm run build",
+		"---- TEST ----------------------------------------------------------": "",
+		"pretest": "node ./build.js",
+		"test": "tsc --noEmit && vitest run --passWithNoTests --coverage",
+		"test:e2e": "npm run pretest && wdio run ./test/wdio.conf.ts",
+		"---- LINT ----------------------------------------------------------": "",
+		"lint": "eslint ./src --fix",
+		"format": "prettier ./src --write",
+		"---- OTHER ----------------------------------------------------------": "",
+		"clean": "rm -rf ./dist ./node_modules"
+	},
+	"dependencies": {
+		"@inlang/result": "workspace:*",
+		"@inlang/sdk": "workspace:*",
+		"@inlang/telemetry": "workspace:*",
+		"@lix-js/client": "workspace:*",
+		"@lix-js/fs": "workspace:*",
+		"@vitest/coverage-v8": "0.34.6",
+		"https-proxy-agent": "7.0.2",
+		"require-from-string": "^2.0.2",
+		"throttle-debounce": "^5.0.0",
+		"vitest": "0.34.6"
+	},
+	"devDependencies": {
+		"@sentry/node": "^7.99.0",
+		"@types/fs-extra": "^11.0.2",
+		"@types/glob": "^8.1.0",
+		"@types/mocha": "^10.0.2",
+		"@types/node": "^20.11.16",
+		"@types/require-from-string": "^1.2.1",
+		"@types/throttle-debounce": "^5.0.2",
+		"@types/ungap__structured-clone": "^0.3.3",
+		"@types/vscode": "^1.84.2",
+		"@vscode/vsce": "^2.21.1",
+		"@wdio/cli": "^8.24.6",
+		"@wdio/globals": "^8.24.6",
+		"@wdio/local-runner": "^8.24.6",
+		"@wdio/mocha-framework": "^8.24.6",
+		"@wdio/spec-reporter": "^8.24.2",
+		"@wdio/types": "^8.24.2",
+		"chromedriver": "^121.0.2",
+		"comment-json": "^4.2.3",
+		"esbuild": "^0.19.8",
+		"expect-webdriverio": "^4.6.1",
+		"fs-extra": "^11.2.0",
+		"mocha": "^10.2.0",
+		"node-fetch": "^3.3.2",
+		"ovsx": "^0.8.3",
+		"posthog-node": "^3.1.2",
+		"ts-node": "^10.9.1",
+		"typescript": "5.3.2",
+		"wdio-vscode-service": "^6.0.0"
+	},
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"license": "Apache-2.0"
+}
